@@ -44,10 +44,12 @@ FETCH_TIMEOUT = 20
 PLANNER_TOKENS = 600
 VALIDATOR_TOKENS = 1400
 EXTRACTOR_TOKENS = 2500
-WRITER_TOKENS = 4000  # slightly reduced to fit under 12K TPM window
+WRITER_TOKENS = 3500  # reduced to fit under 12K TPM window
 
-# Seconds to sleep between heavy LLM stages to let Groq's sliding TPM window reset
-GROQ_INTER_STAGE_SLEEP = 20
+# Seconds to sleep between heavy LLM stages to let Groq's sliding TPM window reset.
+# Groq free tier = 12,000 tokens/minute sliding window. The Extractor burns ~8K tokens.
+# We must wait ~40s for the window to clear enough headroom for the Writer's ~5K request.
+GROQ_INTER_STAGE_SLEEP = 40
 
 # =========================
 # PYDANTIC SCHEMAS (manual parse only)
@@ -558,8 +560,8 @@ def run_research_pipeline(topic: str, status_cb=None) -> Tuple[str, Dict[str, An
         debug["extracted_evidence"] = [_to_dict(e) for e in evidence]
 
     # --- FREE-TIER TPM COOLDOWN ---
-    # Groq's sliding 1-min window counts the Extractor's ~9K tokens.
-    # The Writer needs ~6K tokens. We must wait for the window to clear
+    # Groq's sliding 1-min window counts the Extractor's ~8K tokens.
+    # The Writer needs ~5K tokens. We must wait for the window to clear
     # enough headroom before firing the next heavy LLM call.
     _status("⏳ Making sure everything runs smoothly...", 82)
     time.sleep(GROQ_INTER_STAGE_SLEEP)
