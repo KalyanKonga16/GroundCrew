@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 st.set_page_config(
-    page_title="AI Research Pipeline",
+    page_title="GroundCrew",
     page_icon="🔬",
     layout="wide"
 )
 
-st.title("🔬 AI Research Pipeline")
+st.title("🔬 GroundCrew")
 st.caption("Turn any topic into a fully cited research report — powered by AI")
 
 with st.sidebar:
