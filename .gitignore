@@ -2,6 +2,9 @@
 .env
 !.env.example
 
+# Streamlit Cloud secrets
+.streamlit/secrets.toml
+
 # Python
 __pycache__/
 *.py[cod]
@@ -44,9 +47,6 @@ env/
 # OS
 .DS_Store
 Thumbs.db
-
-# Streamlit
-.streamlit/
 
 # Outputs (optional — uncomment if you don't want to track generated reports)
 # outputs/
