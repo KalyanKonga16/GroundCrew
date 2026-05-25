@@ -1,4 +1,6 @@
-# 🔬 AI Research Pipeline
+# 🔬 GroundCrew
+
+**Live Demo:** [https://groundcrew.streamlit.app/](https://groundcrew.streamlit.app/)
 
 Turn any topic into a fully cited, structured research report — powered by a multi-agent system that searches the live web, validates sources, extracts evidence, and writes with inline citations.
 
@@ -38,8 +40,8 @@ The system runs as a **team of 4 specialized AI agents**, each with a single job
 
 ### 1. Clone & enter the folder
 ```bash
-git clone https://github.com/yourusername/research-pipeline.git
-cd research-pipeline
+git clone https://github.com/yourusername/groundcrew.git
+cd groundcrew
 ```
 
 ### 2. Create a virtual environment
@@ -57,8 +59,9 @@ pip install -r requirements.txt
 ```
 
 ### 4. Add your API keys
+
+#### Local development (`.env` file)
 ```bash
-# Copy the example file
 cp .env.example .env
 ```
 Edit `.env` and paste your keys:
@@ -66,6 +69,17 @@ Edit `.env` and paste your keys:
 GROQ_API_KEY=gsk_your_key_here
 TAVILY_API_KEY=tvly_your_key_here
 ```
+
+#### Streamlit Cloud deployment (secrets)
+Create `.streamlit/secrets.toml` with this exact TOML format:
+```toml
+GROQ_API_KEY = "gsk_your_key_here"
+TAVILY_API_KEY = "tvly_your_key_here"
+
+# Optional
+# GROQ_MODEL = "llama-3.3-70b-versatile"
+```
+
 - [Get a free Groq key](https://console.groq.com/keys)
 - [Get a free Tavily key](https://app.tavily.com/)
 
@@ -78,29 +92,9 @@ The app opens at `http://localhost:8501`.
 
 ---
 
-## 📸 Interface
-
-```
-🔬 AI Research Pipeline
-Turn any topic into a fully cited research report — powered by AI
-
-[ Enter research topic                                    ]
-[ Run Research Pipeline                                   ]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  100%
-✅ All done!
-
-Research Report
-─────────────────
-# Executive Summary
-...
-```
-
----
-
 ## 🎯 Why this is more accurate than ChatGPT, Perplexity, or a single LLM
 
-| Capability | Single LLM (temp=0) | ChatGPT Browsing | Perplexity | **This Pipeline** |
+| Capability | Single LLM (temp=0) | ChatGPT Browsing | Perplexity | **GroundCrew** |
 |---|---|---|---|---|
 | **Citations** | Often hallucinated | Black-box, unverifiable | Prettified but un-auditable | **Every claim tied to a validated URL via Extractor** |
 | **Source freshness** | Training cutoff only | Real-time but opaque | Real-time but opaque | **Live Tavily search + domain scoring** |
@@ -108,7 +102,7 @@ Research Report
 | **Can say "insufficient evidence"** | No — invents content | No — rounds confidently | No — optimizes for engagement | **Yes — Writer is firewalled from the internet** |
 | **Cost at scale** | $$$ (OpenAI GPT-4) | $$$ (subscription) | $$$ (subscription) | **Free tier: Groq + Tavily** |
 
-> **The critical difference:** A single LLM at `temperature=0` is a *confident liar with a fixed seed*. It will give you the same fake citation every time. This pipeline forces the LLM to **earn every sentence** from live, extracted evidence — and allows it to remain silent when the evidence is not there.
+> **The critical difference:** A single LLM at `temperature=0` is a *confident liar with a fixed seed*. It will give you the same fake citation every time. GroundCrew forces the LLM to **earn every sentence** from live, extracted evidence — and allows it to remain silent when the evidence is not there.
 
 ---
 
@@ -126,11 +120,12 @@ Research Report
 ## 📁 Project Structure
 
 ```
-research-pipeline/
+groundcrew/
 ├── app.py                 # Streamlit frontend
 ├── agents.py              # CrewAI backend — 4 agents + pipeline logic
 ├── requirements.txt       # Python dependencies
-├── .env.example           # API key template (safe to commit)
+├── .env.example           # Local API key template (safe to commit)
+├── .streamlit/secrets.toml # Streamlit Cloud secrets (gitignored)
 ├── .gitignore             # Secrets + cache exclusions
 ├── outputs/               # Generated reports (optional)
 └── README.md              # You are here
@@ -150,12 +145,12 @@ Try these for rich, fully cited reports:
 
 ## ⚙️ Configuration
 
-Edit `.env` to customize:
+Edit `.env` (local) or `.streamlit/secrets.toml` (cloud) to customize:
 
-```bash
+```toml
 # Optional: override the default model
 # Available on Groq free tier: llama-3.3-70b-versatile, llama-4-scout, gpt-oss-20b, qwen-3-32b
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL = "llama-3.3-70b-versatile"
 ```
 
 ---
